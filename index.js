@@ -5,7 +5,7 @@ const cron = require('node-cron')
 const Appoint = require('./models/Appoint')
 const User = require('./models/User')
 const Doctor = require('./models/Doctor')
-
+const fs = require('fs');
 
 
 const PORT = 5000
@@ -16,19 +16,6 @@ const app = express()
 app.use(express.json())
 app.use('/api', router)
 
-
-
-const findDoctorById = async (id) => {
-    const doctor = await Doctor.findOne({_id: id})
-
-}
-
-
-
-
-const findUserById = (id) => {
-
-}
 
 
 
@@ -47,13 +34,25 @@ const Start = async () => {
 
 
             const appoint = await Appoint.find({ slot: tomorrow })
-            console.log(appoint);
+            console.log(appoint)
 
 
-            const doctor_name = await Doctor.findOne({_id: appoint.doctor_id}).name
-            const user_name = await User.findOne({_id: appoint.user_id}).name
+            const doctor = await Doctor.findOne({id: appoint.doctor_id})
+            const user = await User.findOne({id: appoint.user_id})
 
-            console.log(doctor_name, user_name);
+            console.log(doctor.name, user.name);
+
+
+            var currentdate = new Date(); 
+            var datetime = "Время: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " | "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+            fs.appendFileSync("logs.txt","\n" + datetime);
+
 
 
             // })
