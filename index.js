@@ -26,36 +26,27 @@ const Start = async () => {
 
 
 
-        // cron.schedule('0 9 * * *', async () => {
-            const tomorrow = new Date('2023-04-28T12:42:58.257+00:00')
-            console.log(tomorrow);
-
-
-
+        cron.schedule('0 10 * * *', async () => {
+            const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000)
 
             const appoint = await Appoint.find({ slot: tomorrow })
-            console.log(appoint)
-
 
             const doctor = await Doctor.findOne({id: appoint.doctor_id})
             const user = await User.findOne({id: appoint.user_id})
 
-            console.log(doctor.name, user.name);
 
-
-            var currentdate = new Date(); 
+            var currentdate = new Date();
             var datetime = "Время: " + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " | "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " | "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
 
-            fs.appendFileSync("logs.txt","\n" + datetime);
+            fs.appendFileSync("logs.txt","\n" + `${datetime} : Привет! ${user.name}, вам через 24 часа к ${doctor.spec}.`);
 
+            })
 
-
-            // })
         }
     catch (error) {
         console.log(error);
